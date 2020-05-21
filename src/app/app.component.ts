@@ -1,10 +1,21 @@
 import { Component } from '@angular/core';
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
-})
+import { User, Role } from './_models';
+import { AuthenticationService } from './_services/authentication.service';
+
+@Component({ selector: 'app', templateUrl: 'app.component.html' })
 export class AppComponent {
-  title = 'demoFrontend';
+    user: User;
+
+    constructor(private authenticationService: AuthenticationService) {
+        this.authenticationService.user.subscribe(x => this.user = x);
+    }
+
+    get isAdmin() {
+        return this.user && this.user.role === Role.Admin;
+    }
+
+    logout() {
+        this.authenticationService.logout();
+    }
 }
